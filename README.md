@@ -2,8 +2,7 @@
 
 ### Reproduction en JavaScript du jeu Mordicus 2
 
-Ce projet est une reproduction la plus fidèle possible du jeu Mordicus 2, un jeu développé par Loto-Québec et paru au courant des années 1990 sur le terminal de [Vidéoway](https://fr.wikipedia.org/wiki/Vid%C3%A9oway). Le jeu est aujourd'hui introuvable dans sa version originale.
-Mordicus est un jeu de logique du type Sokoban. Pour réussir un niveau, le joueur doit ramasser chacune des pièces et donner toutes les bananes à manger aux gorilles, sans se faire bouffer (voir plus bas pour des captures d'écran du jeu).
+Ce projet est une reproduction la plus fidèle possible de Mordicus 2, un jeu développé par Loto-Québec et paru au courant des années 1990 sur le terminal de [Vidéoway](https://fr.wikipedia.org/wiki/Vid%C3%A9oway). Mordicus 2, aujourd'hui introuvable dans sa version originale, est un jeu de logique du type Sokoban.
 
 Je tiens à remercier et à féliciter Maxime de la chaîne YouTube [Des Jeux pis d'la Bière](https://youtube.com/@jeuxbiere?feature=shared) pour ses recherches sur Mordicus 2 qui ont permis de déduire les règles du jeu ainsi que de retrouver plusieurs des niveaux originaux.
 
@@ -32,7 +31,7 @@ Faites la touche _Échapper_ à tout moment pour abandonner et recommencer le ni
 
 Vous débutez avec 1000 points "BONI" et en perdez 5 par déplacement. Les meilleurs pointages pour chacun des niveaux sont conservés en localStorage, ils persistent donc après avoir fermé la page.
 
-Le code d'accès (mot de passe) du dernier niveau atteint sera automatiquement entré dans le champ de mot de passe, mais il ne sera pas sauvegardé si vous fermez la page. Vous devrez le noter, comme dans le temps!
+Le code d'accès du dernier niveau atteint sera automatiquement entré dans le champ de l'écran de saisie du code d'accès, mais il ne sera pas sauvegardé si vous fermez le navigateur. Vous devrez le prendre en note, comme dans le temps!
 
 ## Captures
 
