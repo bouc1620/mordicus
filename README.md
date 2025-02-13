@@ -24,9 +24,9 @@ npm run dev
 
 Mordicus se dirige avec les flèches du clavier,
 
-Appuyez sur _Espace_ ou _Enter_ pour le caractère « ✓ »,
+Appuyez sur _Espace_ ou _Entrée_ pour le caractère « ✓ »,
 
-Faites _Escape_ à tout moment pour abandonner et recommencer le niveau.
+Faites la touche _Échapper_ à tout moment pour abandonner et recommencer le niveau.
 
 ---
 
