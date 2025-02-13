@@ -3,6 +3,8 @@
 Reproduction en JavaScript du jeu Mordicus 2 sur [Vidéoway](https://fr.wikipedia.org/wiki/Vid%C3%A9oway).
 
 Ce projet est une reproduction la plus fidèle possible du jeu Mordicus 2, un jeu développé par Loto-Québec et paru au courant des années 1990 sur le terminal de Vidéoway.
+Mordicus était un jeu de logique du type Sokoban. Pour réussir un niveau, le joueur doit ramasser chacune des pièces et donner toutes les bananes à manger aux gorilles, sans se faire bouffer (voir plus bas pour des captures d'écran du jeu).
+
 Je tiens à remercier et à féliciter Maxime de la chaîne YouTube [Des Jeux pis d'la Bière](https://youtube.com/@jeuxbiere?feature=shared) pour ses recherches sur Mordicus 2, aujourd'hui introuvable dans sa version originale, qui ont permis de déduire les règles du jeu ainsi que de retrouver plusieurs des niveaux originaux.
 
 Les 240 niveaux du jeu "frère" [Mozaic](https://youtu.be/YygmFM3qP8w?feature=shared) que Maxime a [répertoriés et archivés](https://archive.org/details/mozaic-240-levels/001.png) sont inclus dans ce projet. Les premiers niveaux connus de Mordicus 2 sont présents dans le jeu Mozaic aux positions [148](https://archive.org/details/mozaic-240-levels/148.png), [142](https://archive.org/details/mozaic-240-levels/142.png) et [143](https://archive.org/details/mozaic-240-levels/143.png). Dans cette version JavaScript, les 3 niveaux ont été déplacés au début alors tous les autres sont demeurés dans leur ordre relatif excepté le niveau 89 qui a été tiré 3 emplacements plus près du début, de retour à la position 89.
