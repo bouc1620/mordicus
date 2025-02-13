@@ -28,9 +28,9 @@ Faites _Escape_ à tout moment pour abandonner et recommencer le niveau.
 
 ---
 
-Vous débutez avec 1000 points "BONI" et en perdez 5 par mouvement. Ces points sont additionnés au "SCORE" une fois le niveau réussi. Les meilleurs pointages pour chacun des niveaux sont conservés en localStorage, ils persistent donc après avoir fermé la page.
+Vous débutez avec 1000 points "BONI" et en perdez 5 par déplacement. Les meilleurs pointages pour chacun des niveaux sont conservés en localStorage, ils persistent donc après avoir fermé la page.
 
-Le code du dernier niveau atteint sera automatiquement entré dans le champ de mot de passe, mais il ne sera pas sauvegardé si vous fermez la page. Vous devrez le noter, comme dans le temps!
+Le code d'accès (mot de passe) du dernier niveau atteint sera automatiquement entré dans le champ de mot de passe, mais il ne sera pas sauvegardé si vous fermez la page. Vous devrez le noter, comme dans le temps!
 
 ## Captures
 
