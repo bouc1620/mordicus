@@ -34,7 +34,7 @@ export const toggleUseOriginalTitleScreen = (): void => {
 export class Canvas {
   static readonly width = 256;
   static readonly height = 200;
-  static readonly scalingFactor = 5;
+  static readonly scalingFactor = 4;
 
   static readonly activeMoveDelay = 215;
   static readonly passiveMoveDelay = Canvas.activeMoveDelay * 2.25;

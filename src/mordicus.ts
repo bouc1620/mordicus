@@ -4,7 +4,6 @@ import {
   exhaustMap,
   filter,
   forkJoin,
-  from,
   last,
   merge,
   Observable,
@@ -36,7 +35,7 @@ export class Game {
   get start$(): Observable<unknown> {
     return forkJoin({
       images: this._canvas.loadImages$(),
-      levels: from(this._levels.loadLevels()),
+      levels: this._levels.loadLevels$(),
     }).pipe(
       switchMap(() =>
         this._state.screen$.pipe(

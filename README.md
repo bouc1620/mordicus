@@ -18,13 +18,22 @@ npm install
 npm run dev
 ```
 
+## Contrôles
+
+Mordicus se dirige avec les flèches du clavier,
+Appuyez sur Espace ou Enter pour le caractère "✓",
+Faites Escape à tout moment pour abandonner et recommencer le niveau.
+
+Vous perdez 5 points "Boni" par mouvement, ces points sont additionnés au "Score" lorsque le niveau est réussi. Les meilleurs pointages pour chacun des niveaux sont conservés en localStorage, ils persistent donc après avoir fermé la page.
+Le code du dernier niveau atteint sera automatiquement entré dans le champ de mot de passe, mais il ne sera pas sauvegardé si vous fermez la page. Vous devrez le noter, comme dans le temps!
+
 ## Captures
 
 Écran titre du jeu original:
 
 <p align="center"><img src="captures/original/titre.png" alt="écran titre original"></img></p>
 
-Capture de la reproduction:
+Captures de la reproduction:
 
 <p align="center"><img src="captures/reproduction/titre.png" alt="écran titre reproduit"></img></p>
 
