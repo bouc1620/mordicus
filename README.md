@@ -9,7 +9,7 @@ Je tiens à remercier et à féliciter Maxime de la chaîne YouTube [Des Jeux pi
 
 Les 240 niveaux du jeu "frère" [Mozaic](https://youtu.be/YygmFM3qP8w?feature=shared) que Maxime a [répertoriés et archivés](https://archive.org/details/mozaic-240-levels/001.png) sont inclus dans ce projet. Les premiers niveaux connus de Mordicus 2 sont présents dans le jeu Mozaic aux positions [148](https://archive.org/details/mozaic-240-levels/148.png), [142](https://archive.org/details/mozaic-240-levels/142.png) et [143](https://archive.org/details/mozaic-240-levels/143.png). Dans cette version JavaScript, les 3 niveaux ont été déplacés au début alors tous les autres sont demeurés dans leur ordre relatif excepté le niveau 89 qui a été replacé à la position 89.
 
-Les niveaux ont été copiés à l'aide d'un éditeur que vous pouvez aussi trouver sur mon GitHub. Ce fut une tâche longue et abrutissante et il est très probable que j'ai fait des erreurs. Si vous en décelez, veuillez m'en informer en créant une "Issue" ou en proposant une "Pull request" avec la correction.
+Les niveaux ont été copiés à l'aide d'un éditeur que vous pourrez aussi retrouver sur mon GitHub. Ce fut une tâche longue et abrutissante et il est très probable que j'ai fait des erreurs. Si vous en décelez, veuillez m'en informer en créant une "Issue" ou en proposant une "Pull request" avec la correction.
 
 ## Installation
 
