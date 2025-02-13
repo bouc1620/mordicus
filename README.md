@@ -2,9 +2,9 @@
 
 ### Reproduction en JavaScript du jeu Mordicus 2
 
-Ce projet est une reproduction la plus fidèle possible de Mordicus 2, un jeu développé par Loto-Québec paru au courant des années 1990 sur le terminal de [Vidéoway](https://fr.wikipedia.org/wiki/Vid%C3%A9oway). Mordicus 2, aujourd'hui introuvable dans sa version originale, est un jeu de logique du type Sokoban.
+Ce projet est une reproduction la plus fidèle possible de Mordicus 2, un jeu développé par Loto-Québec paru au courant des années 1990 sur le terminal de [Vidéoway](https://fr.wikipedia.org/wiki/Vid%C3%A9oway). Aujourd'hui introuvable dans sa version originale, Mordicus est un jeu de logique du type Sokoban.
 
-Je tiens à remercier et à féliciter Maxime de la chaîne YouTube [Des Jeux pis d'la Bière](https://youtube.com/@jeuxbiere?feature=shared) pour ses recherches sur Mordicus 2 qui ont permis de déduire les règles du jeu ainsi que de retrouver plusieurs des niveaux originaux.
+Je tiens à remercier et à féliciter Maxime de la chaîne YouTube [Des Jeux pis d'la Bière](https://youtube.com/@jeuxbiere?feature=shared) pour ses recherches qui ont permis de déduire les règles du jeu ainsi que de retrouver plusieurs des niveaux originaux.
 
 Les 240 niveaux du jeu "frère" [Mozaic](https://youtu.be/YygmFM3qP8w?feature=shared) que Maxime a [répertoriés et archivés](https://archive.org/details/mozaic-240-levels/001.png) sont inclus dans ce projet. Les premiers niveaux connus de Mordicus 2 sont présents dans le jeu Mozaic aux positions [148](https://archive.org/details/mozaic-240-levels/148.png), [142](https://archive.org/details/mozaic-240-levels/142.png) et [143](https://archive.org/details/mozaic-240-levels/143.png). Dans cette version JavaScript, les 3 niveaux ont été déplacés au début alors que tous les autres sont demeurés dans leur ordre relatif excepté le niveau 89 qui a été replacé à la position 89.
 
