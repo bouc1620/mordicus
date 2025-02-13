@@ -2,6 +2,10 @@
 
 Reproduction en JavaScript du jeu Mordicus 2 sur [Vidéoway](<https://lostmediawiki.com/Videoway_(lost_Canadian_cable-box_games;_1990-2006)>).
 
+![écran titre](captures/remake/titre.png)
+![niveau 97](captures/remake/097.png)
+![niveau 41](captures/remake/041.png)
+
 Ce projet est une reproduction la plus fidèle possible du jeu original Mordicus 2.
 Je tiens à remercier et à féliciter Maxime de la chaîne YouTube [Des Jeux pis d'la Bière](https://youtube.com/@jeuxbiere?feature=shared) pour ses recherches sur ce jeu des années 1990 qui ont permis de déduire et comprendre les règles du jeu ainsi que de retrouver plusieurs niveaux originaux.
 
