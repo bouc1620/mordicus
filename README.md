@@ -18,8 +18,8 @@ npm install
 npm run dev
 ```
 
-<p style="text-align: center"><img src="captures/remake/titre.png" alt="écran titre"></img></p>
+<p align="center"><img src="captures/remake/titre.png" alt="écran titre"></img></p>
 
-<p style="text-align: center"><img src="captures/remake/097.png" alt="niveau 97"></img></p>
+<p align="center"><img src="captures/remake/097.png" alt="niveau 97"></img></p>
 
-<p style="text-align: center"><img src="captures/remake/041.png" alt="niveau 41"></img></p>
+<p align="center"><img src="captures/remake/041.png" alt="niveau 41"></img></p>
