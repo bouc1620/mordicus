@@ -49,21 +49,21 @@ export class Levels {
             });
           });
         }
+
+        // // logs level passwords
+        // for (const levelsMap of [this._originalLevels, this._customLevels]) {
+        //   const iter = levelsMap.entries();
+        //   let value;
+        //   let stage = 1;
+        //   while ((value = iter.next().value)) {
+        //     console.log(
+        //       `${value[1].isCustom ? 'custom' : 'original'} level #${stage} password: ${value[0]}`,
+        //     );
+        //     stage++;
+        //   }
+        // }
       }),
     );
-
-    // logs level passwords
-    // for (const levelsMap of [this._customLevels, this._originalLevels]) {
-    //   const iter = levelsMap.entries();
-    //   let value;
-    //   let stage = 1;
-    //   while ((value = iter.next().value)) {
-    //     console.log(
-    //       `${value[1].isCustom ? 'custom' : 'original'} level #${stage} password: ${value[0]}`,
-    //     );
-    //     stage++;
-    //   }
-    // }
   }
 
   findLevelWithPassword(password: string): Level | undefined {

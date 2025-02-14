@@ -46,8 +46,4 @@ export namespace KeyboardEvents {
   export const enter$ = all$.pipe(filter((event) => event.key === 'Enter'));
   export const confirm$ = merge(space$, enter$);
   export const backspace$ = all$.pipe(filter((event) => event.key === 'Backspace'));
-  export const keyboardPaste$ = all$.pipe(
-    filter((event) => event.ctrlKey && event.key === 'v'),
-  );
-  export const paste$ = fromEvent<ClipboardEvent>(window, 'paste');
 }
