@@ -36,7 +36,7 @@ export class Canvas {
   static readonly height = 200;
   static readonly scalingFactor = 4;
 
-  static readonly activeMoveDelay = 215;
+  static readonly activeMoveDelay = 200;
   static readonly passiveMoveDelay = Canvas.activeMoveDelay * 2.25;
   static readonly menuDelay = Canvas.passiveMoveDelay * 1.25;
 
@@ -312,7 +312,8 @@ export class Canvas {
         color === 'blue'
           ? this._images.get('numbersBlue')
           : this._images.get('numbersYellow');
-      assert(numbersImage, `the image for numbers character set could not be found`);
+
+      assert(numbersImage, 'the image for numbers character set could not be found');
 
       return [numbersImage, [(charCode - 48) * 8, 0, 8, 8]];
     }
@@ -327,7 +328,8 @@ export class Canvas {
         color === 'blue'
           ? this._images.get('lettersBlue')
           : this._images.get('lettersYellow');
-      assert(lettersImage, `the image for letters character set could not be found`);
+
+      assert(lettersImage, 'the image for letters character set could not be found');
 
       if (charCode >= 64 && charCode <= 122) {
         return [lettersImage, [(charCode - 97) * 8, 0, 8, 8]];
@@ -348,7 +350,8 @@ export class Canvas {
       color === 'blue'
         ? this._images.get('specialsBlue')
         : this._images.get('specialsYellow');
-    assert(specialsImage, `the image for special character set could not be found`);
+
+    assert(specialsImage, 'the image for special character set could not be found');
 
     return [specialsImage, [index * 8, 0, 8, 8]];
   }
@@ -389,6 +392,7 @@ export class Canvas {
     const sprite = this._images.get(unit);
     const index = Units.all.indexOf(unit);
     const viewBox: DrawImageViewBox = [index * 20, 0, 20, 20];
+
     assert(sprite, `the image for sprite ${unit} could not be found`);
     assert(index !== -1, `unit ${unit} could not be found in the units list`);
 
@@ -399,6 +403,7 @@ export class Canvas {
     type: 'gameTitleOriginal' | 'gameTitleSimple' | 'dialogBox' | 'inGameMenus',
   ): HTMLImageElement {
     const menu = this._images.get(type);
+
     assert(menu, `the image for menu type ${type} could not be found`);
 
     return menu;

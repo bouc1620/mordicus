@@ -5,6 +5,7 @@ import {
   filter,
   forkJoin,
   last,
+  map,
   merge,
   Observable,
   of,
@@ -13,7 +14,11 @@ import {
   tap,
 } from 'rxjs';
 import { Canvas, toggleUseOriginalTitleScreen } from './canvas';
-import { Levels } from './levels';
+import {
+  getLastPlayedLevelPassword,
+  Levels,
+  setLastPlayedLevelPassword,
+} from './levels';
 import { Logic } from './logic';
 import {
   State,
@@ -22,14 +27,19 @@ import {
   updateBestTotalScore,
 } from './game-state';
 import { KeyboardEvents } from './keyboard-events';
+import { XBoxGamepadButtons, GamepadEvents } from './gamepad-events';
 
 export class Game {
   private _state = new State();
   private _levels = new Levels();
   private _canvas: Canvas;
+  private _keyboardEvents: KeyboardEvents;
+  private _gamepadEvents: GamepadEvents;
 
   constructor(private _canvasElement: HTMLCanvasElement) {
     this._canvas = new Canvas(this._canvasElement);
+    this._keyboardEvents = new KeyboardEvents();
+    this._gamepadEvents = new GamepadEvents(0);
   }
 
   get start$(): Observable<unknown> {
@@ -67,34 +77,47 @@ export class Game {
 
   private _titleScreen$ = defer(() =>
     merge(
-      KeyboardEvents.all$.pipe(
-        filter((event) => event.key === 'o'),
+      merge(
+        this._keyboardEvents.toggleOriginalScreen$,
+        this._gamepadEvents.buttonRepeat$(XBoxGamepadButtons.Y, {
+          delay: 30,
+          initialDelay: 500,
+        }),
+      ).pipe(
         tap(() => {
           toggleUseOriginalTitleScreen();
           this._canvas.drawSync(this._state.snapshot);
         }),
       ),
-      KeyboardEvents.confirm$.pipe(
+      merge(this._keyboardEvents.confirm$, this._gamepadEvents.confirm$()).pipe(
         tap(() => this._state.update({ screen: 'usePassword' })),
       ),
     ),
   );
 
   private _usePasswordScreen$ = defer(() =>
-    KeyboardEvents.number$.pipe(
-      filter((event) => event.key === '1' || event.key === '2'),
-      tap((event) => {
-        if (event.key === '1') {
+    merge(
+      merge(
+        this._keyboardEvents.number$.pipe(filter((event) => event.key === '1')),
+        this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.X),
+      ).pipe(map(() => '1' as const)),
+      merge(
+        this._keyboardEvents.number$.pipe(filter((event) => event.key === '2')),
+        this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.A),
+      ).pipe(map(() => '2' as const)),
+    ).pipe(
+      tap((key) => {
+        if (key === '1') {
           this._state.update({
+            input: getLastPlayedLevelPassword() ?? initalState.password,
             screen: 'inputPassword',
           });
         } else {
-          const isCustom = this._state.snapshot.isCustom;
-          const firstLevel = this._levels.findLevelWithStageNumber(1, isCustom);
-          assert(
-            firstLevel,
-            `there are no levels in the list of ${isCustom ? 'custom' : 'original'} levels`,
-          );
+          const firstLevel = this._levels.findLevelWithStageNumber(1);
+
+          assert(firstLevel, 'unexpected error, could not find first level');
+
+          setLastPlayedLevelPassword(firstLevel.password);
 
           this._state.update({
             screen: 'level',
@@ -110,23 +133,63 @@ export class Game {
 
   private _inputPasswordScreen$ = defer(() =>
     merge(
-      KeyboardEvents.number$.pipe(
+      this._keyboardEvents.number$.pipe(
         tap((event) => {
           this._state.update({
-            input: `${this._state.snapshot.input.substring(0, 5)}${event.key.toLowerCase()}`,
+            input: `${this._state.snapshot.input.substring(0, 5)}${event.key}`,
           });
           this._canvas.drawSync(this._state.snapshot);
         }),
       ),
-      KeyboardEvents.backspace$.pipe(
+      merge(
+        merge(
+          this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.UP),
+          this._gamepadEvents.buttonRepeat$(XBoxGamepadButtons.UP),
+        ).pipe(map(() => XBoxGamepadButtons.UP as const)),
+        merge(
+          this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.DOWN),
+          this._gamepadEvents.buttonRepeat$(XBoxGamepadButtons.DOWN),
+        ).pipe(map(() => XBoxGamepadButtons.DOWN as const)),
+      ).pipe(
+        tap((key) => {
+          const lastNum =
+            (Number(this._state.snapshot.input.slice(-1) || 0) +
+              (key === XBoxGamepadButtons.UP ? 1 : -1) +
+              10) %
+            10;
+          this._state.update({
+            input: `${this._state.snapshot.input.slice(0, -1)}${lastNum}`,
+          });
+          this._canvas.drawSync(this._state.snapshot);
+        }),
+      ),
+      merge(
+        this._keyboardEvents.backspace$,
+        this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.LEFT),
+      ).pipe(
         tap(() => {
           this._state.update({
-            input: this._state.snapshot.input.slice(0, -1),
+            input: `${this._state.snapshot.input.slice(0, -1)}`,
           });
           this._canvas.drawSync(this._state.snapshot);
         }),
       ),
-      KeyboardEvents.enter$.pipe(
+      this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.RIGHT).pipe(
+        tap(() => {
+          if (this._state.snapshot.input.length === 6) {
+            return;
+          }
+
+          this._state.update({
+            input: `${this._state.snapshot.input.substring(0, 5)}0`,
+          });
+          this._canvas.drawSync(this._state.snapshot);
+        }),
+      ),
+      merge(
+        this._keyboardEvents.enter$,
+        this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.START),
+      ).pipe(
         tap(() => {
           const level = this._levels.findLevelWithPassword(
             this._state.snapshot.input,
@@ -135,6 +198,8 @@ export class Game {
           if (!level) {
             return;
           }
+
+          setLastPlayedLevelPassword(level.password);
 
           this._state.update({
             screen: 'level',
@@ -146,16 +211,16 @@ export class Game {
           });
         }),
       ),
-      KeyboardEvents.escape$.pipe(
+      merge(
+        this._keyboardEvents.escape$,
+        this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.Y),
+      ).pipe(
         tap(() => {
-          const isCustom = !!this._levels.findLevelWithPassword(
-            this._state.snapshot.password,
-          )?.isCustom;
-          const firstLevel = this._levels.findLevelWithStageNumber(1, isCustom);
-          assert(
-            firstLevel,
-            `there are no levels in the list of ${isCustom ? 'custom' : 'original'} levels`,
-          );
+          const firstLevel = this._levels.findLevelWithStageNumber(1);
+
+          assert(firstLevel, 'unexpected error, could not find first level');
+
+          setLastPlayedLevelPassword(firstLevel.password);
 
           this._state.update({
             screen: 'level',
@@ -173,17 +238,21 @@ export class Game {
   private _levelScreen$ = defer(() =>
     merge(
       of(undefined),
-      KeyboardEvents.escape$.pipe(
+      merge(
+        this._keyboardEvents.escape$,
+        this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.Y),
+      ).pipe(
         filter(
           () =>
             !Logic.isPlayerDead(this._state.snapshot) &&
             !Logic.isSuccess(this._state.snapshot),
         ),
+        map(() => 'abort' as const),
       ),
     ).pipe(
       switchMap((event) =>
-        event
-          ? of(event).pipe(
+        event === 'abort'
+          ? of(undefined).pipe(
               tap(() => {
                 this._state.update({
                   lives: this._state.snapshot.lives - 1,
@@ -200,16 +269,16 @@ export class Game {
                 }
               }),
             )
-          : KeyboardEvents.direction$.pipe(
+          : merge(
+              this._keyboardEvents.directionPad$(),
+              this._gamepadEvents.directionPad$(),
+            ).pipe(
               startWith(undefined),
-              exhaustMap((keyboardEvent) =>
-                keyboardEvent
+              exhaustMap((key) =>
+                key
                   ? this._canvas
                       .getMoveDrawingQueue$(
-                        Logic.getMoveResultQueue(
-                          this._state.snapshot,
-                          keyboardEvent.key,
-                        ),
+                        Logic.getMoveResultQueue(this._state.snapshot, key),
                         (state) => this._state.update(state),
                       )
                       .pipe(last())
@@ -246,10 +315,11 @@ export class Game {
   );
 
   private _retryScreen$ = defer(() =>
-    KeyboardEvents.confirm$.pipe(
+    merge(this._keyboardEvents.confirm$, this._gamepadEvents.confirm$()).pipe(
       tap(() => {
         const password = this._state.snapshot.password;
         const currentLevel = this._levels.findLevelWithPassword(password);
+
         assert(
           currentLevel,
           `unexpected error, could not find level with password ${password}`,
@@ -265,17 +335,28 @@ export class Game {
   );
 
   private _completeScreen$ = defer(() =>
-    KeyboardEvents.number$.pipe(
-      filter((event) => event.key === '1' || event.key === '2'),
-      tap((event) => {
-        const isRetry = event.key === '1';
+    merge(
+      merge(
+        this._keyboardEvents.number$.pipe(filter((event) => event.key === '1')),
+        this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.X),
+      ).pipe(map(() => '1')),
+      merge(
+        this._keyboardEvents.number$.pipe(filter((event) => event.key === '2')),
+        this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.A),
+      ).pipe(map(() => '2')),
+    ).pipe(
+      tap((key) => {
+        const isRetry = key === '1';
         const nextLevel = this._levels.findLevelWithStageNumber(
           isRetry ? this._state.snapshot.stage : this._state.snapshot.stage + 1,
           this._state.snapshot.isCustom,
         );
 
         const newScore = this._state.snapshot.score + this._state.snapshot.bonus;
+
         if (nextLevel) {
+          setLastPlayedLevelPassword(nextLevel.password);
+
           this._state.update({
             screen: 'level',
             score: isRetry ? this._state.snapshot.score : newScore,
@@ -297,21 +378,20 @@ export class Game {
   );
 
   private _gameOverScreen$ = defer(() =>
-    KeyboardEvents.confirm$.pipe(
+    merge(this._keyboardEvents.confirm$, this._gamepadEvents.confirm$()).pipe(
       tap(() =>
         this._state.update({
           screen: 'title',
-          input: this._state.snapshot.password,
         }),
       ),
     ),
   );
 
   private _endScreen$ = defer(() =>
-    KeyboardEvents.confirm$.pipe(
+    merge(this._keyboardEvents.confirm$, this._gamepadEvents.confirm$()).pipe(
       tap(() =>
         this._state.update({
-          screen: 'end',
+          screen: 'title',
         }),
       ),
     ),

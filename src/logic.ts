@@ -35,7 +35,8 @@ export namespace Logic {
     dir: DirectionType,
   ): StateSnapshot => {
     const mordicus = Grid.findMordicus(state.grid);
-    assert(mordicus, `invalid grid, no Mordicus character found`);
+
+    assert(mordicus, 'invalid grid, no Mordicus character found');
 
     const unitForward = Grid.getUnitForward(state.grid, mordicus, dir);
     if (unitForward === '🟡' || unitForward === '⬛') {
@@ -95,7 +96,8 @@ export namespace Logic {
     dir: DirectionType,
   ): StateSnapshot => {
     const mordicus = Grid.findMordicus(state.grid);
-    assert(mordicus, `invalid grid, no Mordicus character found`);
+
+    assert(mordicus, 'invalid grid, no Mordicus character found');
 
     return {
       ...state,
@@ -112,7 +114,8 @@ export namespace Logic {
     dir: DirectionType,
   ): StateSnapshot => {
     const mordicus = Grid.findMordicus(state.grid);
-    assert(mordicus, `invalid grid, no Mordicus character found`);
+
+    assert(mordicus, 'invalid grid, no Mordicus character found');
 
     const moved: Coordinates[] = [];
 

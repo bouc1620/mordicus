@@ -45,7 +45,7 @@ export const updateBestScore = (state: StateSnapshot): void =>
   );
 
 const getBestTotalScoreKey = (state: StateSnapshot): string =>
-  `best-total-score-${state.isCustom ? 'custom' : 'original'}`;
+  `best-total-score-${state.isCustom ? 'custom' : 'original'}-levels`;
 
 export const getBestTotalScore = (state: StateSnapshot): number =>
   Number.parseInt(localStorage.getItem(getBestTotalScoreKey(state)) ?? '0');
@@ -76,6 +76,7 @@ export class State {
     this._stage = snapshot.stage;
     this._lives = snapshot.lives;
     this._password = snapshot.password;
+    this._isCustom = snapshot.isCustom;
     this._input = snapshot.input;
 
     this._screen$.next(snapshot.screen);

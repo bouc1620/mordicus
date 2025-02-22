@@ -23,15 +23,15 @@ npm run dev
 
 Mordicus se dirige avec les flèches du clavier,
 
-Appuyez sur _Espace_ ou _Entrée_ pour le caractère « ✓ »,
+Appuyez sur _Espace_ ou _Entrée_ pour le caractère ✓,
 
 Faites la touche _Échapper_ à tout moment pour abandonner et recommencer le niveau.
 
 ---
 
-Vous débutez avec 1000 points "BONI" et en perdez 5 par déplacement. Les meilleurs pointages pour chacun des niveaux sont conservés en localStorage, ils persistent donc après avoir fermé la page.
+Vous débutez avec 1000 points "BONI" et en perdez 5 par déplacement.
 
-Le code d'accès du dernier niveau atteint sera automatiquement entré dans le champ de l'écran de saisie du code d'accès, mais il ne sera pas sauvegardé si vous fermez le navigateur. Vous devrez le prendre en note, comme dans le temps!
+Les meilleurs pointages pour chacun des niveaux ainsi que le code d'accès du dernier niveau joué sont sauvegardés en localStorage, ils persistent donc après avoir fermé la page.
 
 ## Captures
 

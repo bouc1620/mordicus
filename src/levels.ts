@@ -26,6 +26,14 @@ const getAugmentedGrid = (
   stage: index + 1,
 });
 
+const lastPlayedLevelPasswordKey = 'last-level-password';
+
+export const getLastPlayedLevelPassword = (): string | null =>
+  localStorage.getItem(lastPlayedLevelPasswordKey);
+
+export const setLastPlayedLevelPassword = (password: string): void =>
+  localStorage.setItem(lastPlayedLevelPasswordKey, password);
+
 export class Levels {
   private _originalLevels = new Map<string, Level>();
   private _customLevels = new Map<string, Level>();
@@ -36,13 +44,16 @@ export class Levels {
       tap((levels: { original: GridType[]; custom: GridType[] }) => {
         for (const [type, list] of Object.entries(levels)) {
           const isCustom = type === 'custom';
-          const levelsMap = isCustom ? this._customLevels : this._originalLevels;
           list.forEach((grid, index) => {
             let password = simpleLength6Hash(JSON.stringify(grid));
-            while (levelsMap.has(password)) {
-              password = `${Number(password) + 1}`.slice(-6);
+            while (
+              this._originalLevels.has(password) ||
+              this._customLevels.has(password)
+            ) {
+              password = `${Number(password) + 1}`.slice(-6).padStart(6, '0');
             }
 
+            const levelsMap = isCustom ? this._customLevels : this._originalLevels;
             levelsMap.set(password, {
               ...getAugmentedGrid(grid, isCustom, index),
               password,
@@ -50,7 +61,7 @@ export class Levels {
           });
         }
 
-        // // logs level passwords
+        // // logs all level passwords
         // for (const levelsMap of [this._originalLevels, this._customLevels]) {
         //   const iter = levelsMap.entries();
         //   let value;

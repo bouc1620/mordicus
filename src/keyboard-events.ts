@@ -1,4 +1,20 @@
-import { filter, fromEvent, map, merge, NEVER, of, switchMap, timer } from 'rxjs';
+import {
+  distinctUntilChanged,
+  exhaustMap,
+  filter,
+  fromEvent,
+  map,
+  merge,
+  NEVER,
+  Observable,
+  of,
+  scan,
+  shareReplay,
+  startWith,
+  switchMap,
+  timer,
+  withLatestFrom,
+} from 'rxjs';
 import { Directions, DirectionType } from './directions';
 import { Canvas } from './canvas';
 
@@ -8,42 +24,81 @@ const isDirectionKey = (
   key: DirectionType;
 } => Directions.isDirectionKey(event.key);
 
-export namespace KeyboardEvents {
-  export const all$ = fromEvent<KeyboardEvent>(window, 'keydown');
-  export const alphaNumeric$ = all$.pipe(
-    filter((event) => /^[a-zA-Z0-9]$/.test(event.key)),
-  );
-  export const number$ = all$.pipe(filter((event) => /^[0-9]$/.test(event.key)));
-  const directionKey$ = all$.pipe(filter(isDirectionKey));
-  const keyupDirectionKey$ = fromEvent<KeyboardEvent>(window, 'keyup').pipe(
-    filter(isDirectionKey),
-  );
-  // replicates the default KeyboardEvent.repeat delay with custom delay
-  export const direction$ = merge(
-    directionKey$.pipe(filter((event) => !event.repeat)),
-    directionKey$.pipe(filter((event) => !event.repeat)).pipe(
-      switchMap((event) =>
-        merge(
-          of(event),
-          keyupDirectionKey$.pipe(
-            filter((keyupEvent) => keyupEvent.key === event.key),
-            map(() => null),
-          ),
-        ).pipe(
-          switchMap((event) =>
-            !event
-              ? NEVER
-              : timer(Canvas.activeMoveDelay * 2, Canvas.activeMoveDelay).pipe(
-                  map(() => event),
-                ),
-          ),
-        ),
+export class KeyboardEvents {
+  private _all$ = fromEvent<KeyboardEvent>(window, 'keydown');
+
+  number$ = this._all$.pipe(filter((event) => /^[0-9]$/.test(event.key)));
+
+  space$ = this._all$.pipe(filter((event) => event.key === ' '));
+  enter$ = this._all$.pipe(filter((event) => event.key === 'Enter'));
+  confirm$ = merge(this.space$, this.enter$);
+
+  escape$ = this._all$.pipe(filter((event) => event.key === 'Escape'));
+
+  backspace$ = this._all$.pipe(filter((event) => event.key === 'Backspace'));
+
+  toggleOriginalScreen$ = this._all$.pipe(filter((event) => event.key === 'o'));
+
+  directionPad$(
+    {
+      delay: repeatDelay = Canvas.activeMoveDelay,
+      initialDelay,
+    }:
+      | {
+          delay?: number;
+          initialDelay?: number;
+        }
+      | undefined = {
+      delay: Canvas.activeMoveDelay,
+    },
+  ): Observable<DirectionType> {
+    const directions$ = this._all$.pipe(
+      filter(isDirectionKey),
+      filter((event) => !event.repeat),
+      shareReplay(1),
+    );
+
+    const anyPressed$ = directions$.pipe(map(() => true));
+
+    const allReleased$ = merge(
+      directions$,
+      fromEvent<KeyboardEvent>(window, 'keyup').pipe(filter(isDirectionKey)),
+    ).pipe(
+      scan(
+        (acc, event) => ({
+          ...acc,
+          [event.key]: event.type === 'keyup',
+        }),
+        {
+          ArrowUp: true,
+          ArrowRight: true,
+          ArrowDown: true,
+          ArrowLeft: true,
+        },
       ),
-    ),
-  );
-  export const escape$ = all$.pipe(filter((event) => event.key === 'Escape'));
-  export const space$ = all$.pipe(filter((event) => event.key === ' '));
-  export const enter$ = all$.pipe(filter((event) => event.key === 'Enter'));
-  export const confirm$ = merge(space$, enter$);
-  export const backspace$ = all$.pipe(filter((event) => event.key === 'Backspace'));
+      map((state) => Object.values(state).every((pressed) => pressed)),
+      filter((allReleased) => allReleased),
+      map(() => null),
+    );
+
+    const lastPressed$ = directions$.pipe(map(({ key }) => key));
+
+    return merge(anyPressed$, allReleased$).pipe(
+      distinctUntilChanged(),
+      switchMap((anyPressed) =>
+        !anyPressed
+          ? NEVER
+          : of(undefined).pipe(
+              withLatestFrom(lastPressed$),
+              exhaustMap(([_, lastPressed]) =>
+                timer(initialDelay ?? repeatDelay * 2, repeatDelay).pipe(
+                  withLatestFrom(lastPressed$),
+                  map(([_, key]) => key),
+                  startWith(lastPressed),
+                ),
+              ),
+            ),
+      ),
+    );
+  }
 }
