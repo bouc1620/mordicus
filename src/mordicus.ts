@@ -79,10 +79,13 @@ export class Game {
     merge(
       merge(
         this._keyboardEvents.toggleOriginalScreen$,
-        this._gamepadEvents.buttonRepeat$(XBoxGamepadButtons.Y, {
-          delay: 30,
-          initialDelay: 500,
-        }),
+        merge(
+          this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.Y),
+          this._gamepadEvents.buttonRepeat$(XBoxGamepadButtons.Y, {
+            delay: 30,
+            initialDelay: 500,
+          }),
+        ),
       ).pipe(
         tap(() => {
           toggleUseOriginalTitleScreen();
@@ -145,16 +148,16 @@ export class Game {
         merge(
           this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.UP),
           this._gamepadEvents.buttonRepeat$(XBoxGamepadButtons.UP),
-        ).pipe(map(() => XBoxGamepadButtons.UP as const)),
+        ).pipe(map(() => 'ArrowUp' as const)),
         merge(
           this._gamepadEvents.buttonPressed$(XBoxGamepadButtons.DOWN),
           this._gamepadEvents.buttonRepeat$(XBoxGamepadButtons.DOWN),
-        ).pipe(map(() => XBoxGamepadButtons.DOWN as const)),
+        ).pipe(map(() => 'ArrowDown' as const)),
       ).pipe(
         tap((key) => {
           const lastNum =
             (Number(this._state.snapshot.input.slice(-1) || 0) +
-              (key === XBoxGamepadButtons.UP ? 1 : -1) +
+              (key === 'ArrowUp' ? 1 : -1) +
               10) %
             10;
           this._state.update({
